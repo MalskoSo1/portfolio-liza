@@ -9,7 +9,7 @@ export default function Header() {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/pokemons">Pokemons</Link>
+            <Link href="/pokemons?page=1">Pokemons</Link>
           </li>
         </ul>
       </nav>

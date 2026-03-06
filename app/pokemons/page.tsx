@@ -4,16 +4,21 @@ import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
-  useQuery,
 } from "@tanstack/react-query";
-import Image from "next/image";
 
-export default async function Pokemons() {
+export default async function Pokemons({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
+  const page = Number(searchParams.page ?? 1);
   const queryClient = new QueryClient();
+  const limit = 15;
+  const offset = (page - 1) * limit;
 
   await queryClient.prefetchQuery({
-    queryKey: ["getPokemons"],
-    queryFn: () => fetchPokemons(),
+    queryKey: ["getPokemons", page, limit],
+    queryFn: () => fetchPokemons({ limit, offset }),
   });
   return (
     <>

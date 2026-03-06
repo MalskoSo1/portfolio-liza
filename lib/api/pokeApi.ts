@@ -14,9 +14,18 @@ const api = axios.create({
 //   }
 // }
 
-export async function fetchPokemons() {
+interface FetchPokemonsProps {
+  offset: number;
+  limit: number;
+}
+
+export async function fetchPokemons({ limit, offset }: FetchPokemonsProps) {
+  const params = {
+    offset,
+    limit,
+  };
   try {
-    const res = await api.get<PokemonList>("/pokemon");
+    const res = await api.get<PokemonList>("/pokemon", { params });
     return res.data;
   } catch (error) {
     throw error;

@@ -3,15 +3,28 @@
 import { fetchPokemons } from "@/lib/api/pokeApi";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export default function PokemonList() {
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page") ?? 1);
+  const limit = 15;
+
+  const params = {
+    limit,
+    offset: (page - 1) * limit,
+  };
+
   const { data: pokemons } = useQuery({
-    queryKey: ["getPokemons"],
-    queryFn: () => fetchPokemons(),
+    queryKey: ["getPokemons", page, limit],
+    queryFn: () => fetchPokemons(params),
   });
 
   const urlImage =
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
+
   return (
     <>
       <ul>
@@ -29,6 +42,21 @@ export default function PokemonList() {
             </li>
           );
         })}
+      </ul>
+      <ul>
+        <li>
+          {page === 1 ? (
+            <span>Prev</span>
+          ) : (
+            <Link href={`/pokemons?page=${page - 1}`}>Prev</Link>
+          )}
+        </li>
+        <li>
+          <button>Load More</button>
+        </li>
+        <li>
+          <Link href={`/pokemons?page=${page + 1}`}>Next</Link>
+        </li>
       </ul>
     </>
   );
