@@ -21,8 +21,10 @@ export default function PokemonList() {
   };
 
   useEffect(() => {
-    const newPage = Number(searchParams.get("page") ?? 1);
-    if (newPage !== page) setPage(newPage);
+    startTransition(() => {
+      const newPage = Number(searchParams.get("page") ?? 1);
+      if (newPage !== page) setPage(newPage);
+    });
   }, [searchParams]);
 
   const { data: pokemons, isFetching } = useQuery({
@@ -30,26 +32,28 @@ export default function PokemonList() {
     queryFn: () => fetchPokemons(params),
   });
 
-  useEffect(() => {
-    if (pokemons?.results) {
-      setAllPokemons((prev) => {
-        if (page === 1) return [...pokemons.results];
-        return [...prev, ...pokemons.results];
-      });
-    }
-  }, [pokemons, page]);
-
   const handleClickLoadMore = () => {
     setPage((prev) => prev + 1);
   };
 
+  useEffect(() => {
+    startTransition(() => {
+      if (pokemons?.results) {
+        setAllPokemons((prev) => {
+          if (page === 1) return [...pokemons.results];
+          return [...prev, ...pokemons.results];
+        });
+      }
+    });
+  }, [pokemons, page]);
+
   const handleClickNext = () => {
-    setAllPokemons([]); // очищаємо тільки при переході на нову сторінку через Next
+    setAllPokemons([]);
     router.push(`/pokemons?page=${page + 1}`);
   };
 
   const handleClickPrev = () => {
-    setAllPokemons([]); // очищаємо тільки при переході на нову сторінку через Prev
+    setAllPokemons([]);
     router.push(`/pokemons?page=${page - 1}`);
   };
 
