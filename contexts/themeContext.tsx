@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useState } from "react";
+import { createContext, startTransition, useEffect, useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
 
 export type Theme = "light" | "dark";
 
@@ -16,7 +17,30 @@ type Props = {
 };
 
 export const ThemeProvider = ({ children }: Props) => {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useLocalStorage<Theme>("ui-theme", "light");
+  const [mounted, setMounted] = useState(false);
 
-  return <ThemeContext value={{ theme, setTheme }}>{children}</ThemeContext>;
+  useEffect(() => {
+    startTransition(() => {
+      setMounted(true);
+      if (!theme) {
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        setTheme(prefersDark ? "dark" : "light");
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (mounted) document.documentElement.setAttribute("data-theme", theme);
+  }, [theme, mounted]);
+
+  if (!mounted) return null;
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 };
