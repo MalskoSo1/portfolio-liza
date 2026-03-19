@@ -1,4 +1,4 @@
-import PokemonList from "@/components/PokemonList/PokemonList";
+import PokemonList from "@/components/Pokemons/PokemonList/PokemonList";
 import { fetchPokemons } from "@/lib/api/pokeApi";
 import {
   dehydrate,
@@ -11,7 +11,8 @@ export default async function Pokemons({
 }: {
   searchParams: { page?: string };
 }) {
-  const page = Number(searchParams.page ?? 1);
+  const params = await searchParams;
+  const page = Number(params.page ?? 1);
   const queryClient = new QueryClient();
   const limit = 15;
   const offset = (page - 1) * limit;
@@ -20,10 +21,10 @@ export default async function Pokemons({
     queryKey: ["getPokemons", page, limit],
     queryFn: () => fetchPokemons({ limit, offset }),
   });
+
   return (
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <p>Pokemons page</p>
         <PokemonList />
       </HydrationBoundary>
     </>

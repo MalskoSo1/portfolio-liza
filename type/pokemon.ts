@@ -1,12 +1,14 @@
 export interface PokemonList {
   count: number;
-  next: string;
+  next: string | null;
   // "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20"
   previous: string | null;
-  results: {
-    name: string;
-    url: string;
-  }[];
+  results: PokemonSmallInfo[];
+}
+
+export interface PokemonSmallInfo {
+  name: string;
+  url: string;
 }
 
 export interface Pokemon {
