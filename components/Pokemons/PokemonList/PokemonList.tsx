@@ -2,7 +2,6 @@
 
 import { fetchPokemons } from "@/lib/api/pokeApi";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import PokemonItem from "../PokemonItem/PokemonItem";
 import { startTransition, useEffect, useState } from "react";
@@ -11,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 export default function PokemonList() {
   const searchParams = useSearchParams();
-  const [page, setPage] = useState(Number(searchParams.get("page") ?? 1));
+  const [page, setPage] = useState(1);
   const limit = 15;
   const [allPokemons, setAllPokemons] = useState<PokemonSmallInfo[]>([]);
   const router = useRouter();
@@ -21,28 +20,37 @@ export default function PokemonList() {
     offset: (page - 1) * limit,
   };
 
+  useEffect(() => {
+    const newPage = Number(searchParams.get("page") ?? 1);
+    if (newPage !== page) setPage(newPage);
+  }, [searchParams]);
+
   const { data: pokemons, isFetching } = useQuery({
     queryKey: ["getPokemons", page, limit],
     queryFn: () => fetchPokemons(params),
   });
 
   useEffect(() => {
-    startTransition(() => {
-      setPage(Number(searchParams.get("page") ?? 1));
-      setAllPokemons([]);
-    });
-  }, [searchParams]);
-
-  useEffect(() => {
     if (pokemons?.results) {
-      startTransition(() => {
-        setAllPokemons((prev) => [...prev, ...pokemons.results]);
+      setAllPokemons((prev) => {
+        if (page === 1) return [...pokemons.results];
+        return [...prev, ...pokemons.results];
       });
     }
-  }, [pokemons]);
+  }, [pokemons, page]);
 
   const handleClickLoadMore = () => {
     setPage((prev) => prev + 1);
+  };
+
+  const handleClickNext = () => {
+    setAllPokemons([]); // очищаємо тільки при переході на нову сторінку через Next
+    router.push(`/pokemons?page=${page + 1}`);
+  };
+
+  const handleClickPrev = () => {
+    setAllPokemons([]); // очищаємо тільки при переході на нову сторінку через Prev
+    router.push(`/pokemons?page=${page - 1}`);
   };
 
   return (
@@ -64,14 +72,7 @@ export default function PokemonList() {
               {page === 1 ? (
                 <span>Prev</span>
               ) : (
-                <button
-                  onClick={() => {
-                    setAllPokemons([]);
-                    router.push(`/pokemons?page=${page - 1}`);
-                  }}
-                >
-                  Prev
-                </button>
+                <button onClick={handleClickPrev}>Prev</button>
               )}
             </li>
             <li>
@@ -85,14 +86,7 @@ export default function PokemonList() {
               {!pokemons?.next ? (
                 <span>Next</span>
               ) : (
-                <button
-                  onClick={() => {
-                    setAllPokemons([]);
-                    router.push(`/pokemons?page=${page + 1}`);
-                  }}
-                >
-                  Next
-                </button>
+                <button onClick={handleClickNext}>Next</button>
               )}
             </li>
           </ul>
