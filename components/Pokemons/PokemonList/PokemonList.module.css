@@ -1,5 +1,5 @@
 .list {
-  background-color: rgb(223, 250, 247);
+  background-color: var(--bg-color-list-pokemons);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

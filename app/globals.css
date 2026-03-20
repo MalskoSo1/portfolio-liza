@@ -17,6 +17,7 @@ html[data-theme="light"] {
   --button-bg: #eee;
   --button-text: black;
   --card-bg: #f9f9f9;
+  --bg-color-list-pokemons: rgb(223, 250, 247);
 }
 
 html[data-theme="dark"] {
@@ -26,6 +27,7 @@ html[data-theme="dark"] {
   --button-bg: #222;
   --button-text: #eee;
   --card-bg: #222;
+  --bg-color-list-pokemons: rgb(61, 69, 68);
 }
 
 html,
