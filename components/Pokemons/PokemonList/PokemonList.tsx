@@ -50,12 +50,12 @@ export default function PokemonList() {
 
   const handleClickNext = () => {
     setAllPokemons([]);
-    router.push(`/pokemons?page=${page + 1}`);
+    router.push(`/pokemons/filter/all?page=${page + 1}`);
   };
 
   const handleClickPrev = () => {
     setAllPokemons([]);
-    router.push(`/pokemons?page=${page - 1}`);
+    router.push(`/pokemons/filter/all?page=${page - 1}`);
   };
 
   return (
