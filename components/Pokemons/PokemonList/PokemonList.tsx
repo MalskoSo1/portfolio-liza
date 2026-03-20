@@ -59,12 +59,12 @@ export default function PokemonList() {
   };
 
   return (
-    <div className={css.list}>
+    <div>
       {pokemons?.results?.length === 0 ? (
         <span>EMPTY PAGE</span>
       ) : (
         <>
-          <ul>
+          <ul className={css.list}>
             {allPokemons.map((pokemon) => {
               const id = pokemon.url.split("/").filter(Boolean).pop();
               if (!id) return null;
