@@ -19,6 +19,15 @@ interface FetchPokemonsProps {
   limit: number;
 }
 
+interface TypesResponse {
+  results: PokemonType[];
+}
+
+interface PokemonType {
+  name: string;
+  url: string;
+}
+
 export async function fetchPokemons({ limit, offset }: FetchPokemonsProps) {
   const params = {
     offset,
@@ -27,6 +36,15 @@ export async function fetchPokemons({ limit, offset }: FetchPokemonsProps) {
   try {
     const res = await api.get<PokemonList>("/pokemon", { params });
     return res.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function fetchTypesOfPokemons() {
+  try {
+    const res = await api.get<TypesResponse>("/type");
+    return res.data.results;
   } catch (error) {
     throw error;
   }

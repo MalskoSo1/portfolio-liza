@@ -7,6 +7,7 @@ import PokemonItem from "../PokemonItem/PokemonItem";
 import { startTransition, useEffect, useState } from "react";
 import { PokemonSmallInfo } from "@/type/pokemon";
 import { useRouter } from "next/navigation";
+import css from "./PokemonList.module.css";
 
 export default function PokemonList() {
   const searchParams = useSearchParams();
@@ -58,7 +59,7 @@ export default function PokemonList() {
   };
 
   return (
-    <>
+    <div className={css.list}>
       {pokemons?.results?.length === 0 ? (
         <span>EMPTY PAGE</span>
       ) : (
@@ -96,6 +97,6 @@ export default function PokemonList() {
           </ul>
         </>
       )}
-    </>
+    </div>
   );
 }

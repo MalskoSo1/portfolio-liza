@@ -15,7 +15,7 @@ export default function Header() {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/pokemons?page=1">Pokemons</Link>
+            <Link href="/pokemons/filter/all?page=1">Pokemons</Link>
           </li>
           <p>Theme app: {theme}</p>
           <ThemeSwitcher />
