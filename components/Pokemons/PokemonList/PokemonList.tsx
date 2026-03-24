@@ -1,13 +1,14 @@
 "use client";
 
 import { fetchPokemons, fetchPokemonsByType } from "@/lib/api/pokeApi";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PokemonItem from "../PokemonItem/PokemonItem";
 import { startTransition, useEffect, useState } from "react";
 import { PokemonSmallInfo } from "@/type/pokemon";
 import { useRouter } from "next/navigation";
 import css from "./PokemonList.module.css";
+import { usePokemonsStore } from "@/store/usePokemonsStore";
 
 export default function PokemonList() {
   const searchParams = useSearchParams();
@@ -25,6 +26,7 @@ export default function PokemonList() {
   const paginatedPokemons = pokemonsByTypes?.slice(start, end);
   const [lastPokemon, setLastPokemon] = useState<string | null>(null);
   const isLastOnPage = paginatedPokemons?.some((p) => p.name === lastPokemon);
+  const types = usePokemonsStore((s) => s.types);
 
   const params = {
     limit,
@@ -45,10 +47,18 @@ export default function PokemonList() {
     queryFn: () => fetchPokemons(params),
   });
 
-  const { data: pokemonsByType } = useQuery({
-    queryKey: ["pokemonsByType"],
-    queryFn: () => fetchPokemonsByType("steel"),
+  const pokemonsByTypeResults = useQueries({
+    queries:
+      types?.map((type) => ({
+        queryKey: ["pokemonsByType", type],
+        queryFn: () => fetchPokemonsByType(type),
+        enabled: !!type,
+      })) ?? [],
   });
+
+  const pokemonsByType = pokemonsByTypeResults
+    .map((res) => res.data ?? [])
+    .flat();
   // !REQUESTS END
 
   useEffect(() => {

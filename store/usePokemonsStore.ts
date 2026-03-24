@@ -2,15 +2,15 @@ import { create } from "zustand";
 
 interface PokemonsState {
   types: string[] | null;
-  addTypes: (newTypes: string[] | null) => void;
+  setTypes: (types: string[] | null) => void;
   clearTypes: () => void;
 }
 
 export const usePokemonsStore = create<PokemonsState>((set) => ({
   types: null,
-  addTypes: (newTypes) =>
-    set((state) => ({
-      types: [...(state.types ?? []), ...(newTypes ?? [])],
+  setTypes: (types) =>
+    set(() => ({
+      types,
     })),
   clearTypes: () =>
     set({

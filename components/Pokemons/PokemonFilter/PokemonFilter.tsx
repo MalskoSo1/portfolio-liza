@@ -5,6 +5,7 @@ import css from "./PokemonFilter.module.css";
 import { fetchTypesOfPokemons } from "@/lib/api/pokeApi";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { usePokemonsStore } from "@/store/usePokemonsStore";
 
 interface PokemonFilterProps {
   initialTypes: string | undefined;
@@ -14,6 +15,8 @@ export default function PokemonFilter({ initialTypes }: PokemonFilterProps) {
   const [activeTypes, setActiveTypes] = useState<string[]>(
     initialTypes === undefined ? [] : initialTypes.split(",")
   );
+  const setTypes = usePokemonsStore((s) => s.setTypes);
+  const clearTypes = usePokemonsStore((s) => s.clearTypes);
   const router = useRouter();
 
   const toggleType = (typeName: string) => {
@@ -22,6 +25,7 @@ export default function PokemonFilter({ initialTypes }: PokemonFilterProps) {
       : [...activeTypes, typeName];
 
     setActiveTypes(newTypes);
+    setTypes(newTypes);
 
     if (newTypes.length === 0) {
       router.push("/pokemons/filter/all?page=1");
@@ -42,6 +46,7 @@ export default function PokemonFilter({ initialTypes }: PokemonFilterProps) {
           <button
             onClick={() => {
               setActiveTypes([]);
+              clearTypes();
               router.push("/pokemons/filter/all?page=1");
             }}
           >
