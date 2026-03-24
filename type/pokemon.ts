@@ -25,6 +25,16 @@ export interface Pokemon {
   };
 }
 
+export interface PokemonTypeResponse {
+  pokemon: {
+    pokemon: {
+      name: string;
+      url: string;
+    };
+    slot: number;
+  }[];
+}
+
 interface Abilities {
   is_hidden: boolean;
   slot: number;

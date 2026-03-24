@@ -21,13 +21,13 @@ html[data-theme="light"] {
 }
 
 html[data-theme="dark"] {
-  --bg-color: #111;
+  --bg-color: #1b1a1a;
   --text-color: #eee;
   --link-color: #89f;
   --button-bg: #222;
   --button-text: #eee;
   --card-bg: #222;
-  --bg-color-list-pokemons: rgb(61, 69, 68);
+  --bg-color-list-pokemons: rgb(32, 35, 46);
 }
 
 html,

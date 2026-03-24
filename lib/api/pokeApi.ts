@@ -1,4 +1,4 @@
-import { PokemonList } from "@/type/pokemon";
+import { PokemonList, PokemonTypeResponse } from "@/type/pokemon";
 import axios from "axios";
 
 const api = axios.create({
@@ -45,6 +45,17 @@ export async function fetchTypesOfPokemons() {
   try {
     const res = await api.get<TypesResponse>("/type");
     return res.data.results;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// https://pokeapi.co/api/v2/type/{id or name}/
+
+export async function fetchPokemonsByType(currentType: string) {
+  try {
+    const res = await api.get<PokemonTypeResponse>(`/type/${currentType}`);
+    return res.data.pokemon.map((p) => p.pokemon);
   } catch (error) {
     throw error;
   }
