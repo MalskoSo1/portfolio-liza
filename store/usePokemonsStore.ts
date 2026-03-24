@@ -6,17 +6,17 @@ interface PokemonsState {
   clearTypes: () => void;
 }
 
-export const usePokemonsStore = create<PokemonsState>(){
-    (set) => ({
-        types: null,
-        addTypes: (newTypes: string) => 
-            set((state: string[]) => [...state.types ?? []], ...newTypes),
-      clearTypes: () =>
-        set({
-          types: null,
-        }),
-    })
-};
+export const usePokemonsStore = create<PokemonsState>((set) => ({
+  types: null,
+  addTypes: (newTypes) =>
+    set((state) => ({
+      types: [...(state.types ?? []), ...(newTypes ?? [])],
+    })),
+  clearTypes: () =>
+    set({
+      types: null,
+    }),
+}));
 
 // const data = {
 //   damage_relations: {
